@@ -5,6 +5,9 @@
 require('dotenv').config();
 var express = require('express');
 var app = express();
+let bodyParser = require('body-parser');
+let bodyParserMiddleware = bodyParser.urlencoded({ extended: false });
+app.use(bodyParserMiddleware);
 
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // so that your API is remotely testable by FCC
@@ -29,4 +32,11 @@ var listener = app.listen(process.env.PORT || 3000, function() {
   console.log('Your app is listening on port ' + listener.address().port);
 });
 
-//test
+// return ipaddress, language, and software on "/api/whoami" route
+app.get('/api/whoami', (req, res) => {
+  res.json({
+    ipaddress: req.ip,
+    language: req.acceptsLanguages().join(),
+    software: req.get("user-agent")
+  })
+});
